@@ -1,0 +1,8 @@
+package wasmcloud:hello;
+
+world hello {
+  import wasi:filesystem/preopens@0.2.0;
+
+  export wasi:keyvalue/atomic@0.2.0-draft;
+  export wasi:logging/logging;
+}
