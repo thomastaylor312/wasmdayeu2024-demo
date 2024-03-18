@@ -1,7 +1,7 @@
 package demo:composition;
 
-let transitive = new fake:transitive { ... };
-let kv = new fake:kv { "wasi:keyvalue/wasi-keyvalue-error@0.2.0-draft": transitive.wasi-keyvalue-error, "wasi:keyvalue/types@0.2.0-draft": transitive.types, ... };
+let transitive = new mock:transitive { ... };
+let kv = new mock:kv { "wasi:keyvalue/wasi-keyvalue-error@0.2.0-draft": transitive.wasi-keyvalue-error, "wasi:keyvalue/types@0.2.0-draft": transitive.types, ... };
 let hello = new hello:kv { "wasi:keyvalue/atomic@0.2.0-draft": kv.atomic, "wasi:keyvalue/wasi-keyvalue-error@0.2.0-draft": transitive.wasi-keyvalue-error, "wasi:keyvalue/types@0.2.0-draft": transitive.types, "wasi:logging/logging": kv.logging, ... };
 
 export hello...;

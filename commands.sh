@@ -4,8 +4,9 @@ export WASH_SUBJECT_KEY=SMAEZNJZA3R3GEE2ZF6PXTTUQ6XWCEAXAMXOAS5PKHAHLH4GLISWZCRH
 cd http-hello
 wash build
 
+# See wit world
 wasm-tools component wit build/http_hello_world_s.wasm
-wash scale component -c 3 NCWETVVHNYMYKPQZLFJH7L4E7FSWPEI3MVOSEQUXKXXZIJBKWLSUQ4BV file:///Users/taylor/Documents/code/wasmdayeu2024-demo/http-hello/build/http_hello_world_s.wasm http-hello
+wash start component file:///Users/taylor/Documents/code/wasmdayeu2024-demo/http-hello/build/http_hello_world_s.wasm http-hello
 
 wash start provider file:///Users/taylor/Documents/code/wasmCloud/crates/providers/http-server/build/httpserver.par.gz http-server
 wash config put hello-http ADDRESS=0.0.0.0:8081
@@ -20,6 +21,7 @@ wasmtime serve -S common=y build/http_hello_world_s.wasm
 cd http-hello2
 wash build
 
+# See wit world
 wash update component http-hello file:///Users/taylor/Documents/code/wasmdayeu2024-demo/http-hello2/build/http_hello_world_s.wasm
 
 wash start provider file:///Users/taylor/Documents/code/wasmCloud/crates/providers/kv-redis/build/kvredis.par.gz redis
@@ -27,10 +29,11 @@ wash config put hello-kv URL=redis://127.0.0.1:6379
 wash link put --interface atomic --target-config hello-kv http-hello redis wasi keyvalue
 
 # Step 3: Keyvalue wrapped
-cd fake-kv
+cd mock-kv
 
+# See wit world
 wasm-tools component wit ../http-hello2/build/http_hello_world_s.wasm
-wac encode --dep fake:kv=./build/fake_kv_s.wasm --dep hello:kv=../http-hello2/build/http_hello_world_s.wasm --dep fake:transitive=../transitive/build/transitive_s.wasm -o output.wasm compose.wac
+wac encode --dep mock:kv=./build/mock_kv_s.wasm --dep hello:kv=../http-hello2/build/http_hello_world_s.wasm --dep mock:transitive=../transitive/build/transitive_s.wasm -o output.wasm compose.wac
 wasm-tools component wit output.wasm
 wasmtime serve -S common=y output.wasm
 
@@ -48,9 +51,9 @@ wasm-tools component wit ./build/pong_s.wasm
 wasi-virt build/pong_s.wasm --allow-random -e PONG=wasmday -o virt.wasm
 wasm-tools component wit virt.wasm 
 
-wash scale component -c 3 NCWETVVHNYMYKPQZLFJH7L4E7FSWPEI3MVOSEQUXKXXZIJBKWLSUQ4BV file:///Users/taylor/Documents/code/wasmdayeu2024-demo/pong/virt.wasm ponger
+wash start component file:///Users/taylor/Documents/code/wasmdayeu2024-demo/pong/virt.wasm ponger
 wash link put --interface pingpong http-hello ponger example pong
 
 # Step 6: Composing the component for wasmtime
 
-wac encode --dep ping:pong=./pong/virt.wasm --dep hello:there=./http-hello3/build/http_hello_world_s.wasm --dep fake:kv=./fake-kv/build/fake_kv_s.wasm --dep fake:transitive=./transitive/build/transitive_s.wasm -o output.wasm alltehthingz.wac
+wac encode --dep ping:pong=./pong/virt.wasm --dep hello:there=./http-hello3/build/http_hello_world_s.wasm --dep mock:kv=./mock-kv/build/mock_kv_s.wasm --dep mock:transitive=./transitive/build/transitive_s.wasm -o output.wasm alltehthingz.wac

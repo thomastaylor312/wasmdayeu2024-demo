@@ -1,4 +1,4 @@
-name = "fake-kv"
+name = "mock-kv"
 language = "rust"
 type = "actor"
 version = "0.1.0"
